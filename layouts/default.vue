@@ -29,7 +29,6 @@
       <v-switch v-model="$vuetify.theme.dark" hide-details inset></v-switch>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
       </v-btn>
@@ -69,8 +68,8 @@ export default {
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire",
+          title: "Start",
+          to: "/start",
         },
       ],
       miniVariant: false,
