@@ -1,14 +1,28 @@
 export const state = () => ({
   user: {
-    email: "",
+    email: null,
   },
 });
 
 export const mutations = {
-  add(state, payload) {
+  addUser(state, payload) {
     state.user = {
       ...state.user,
       email: payload.email,
     };
+  },
+};
+
+export const actions = {
+  addUser(context, payload) {
+    this.$fireAuth
+      .createUserWithEmailAndPassword(payload.email, payload.password)
+      .then((cred) => {
+        // context.commit({ type: "addUser", email: cred.user.email });
+        console.log("registered");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };

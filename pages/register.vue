@@ -34,7 +34,14 @@
           outlined
         >
         </v-text-field>
-        <v-btn :disabled="!valid" type="submit" x-large block>Submit</v-btn>
+        <v-btn
+          :loading="buttonLoading"
+          :disabled="!valid"
+          type="submit"
+          x-large
+          block
+          >Submit</v-btn
+        >
       </v-form>
     </v-col>
   </v-row>
@@ -62,21 +69,24 @@ export default {
       ],
       counterOne: 0,
       counterTwo: 0,
+      buttonLoading: false,
     };
   },
   methods: {
     submit() {
-      console.log(this.email, this.password);
-      this.$fireAuth
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then((cred) => {
-          this.$store.commit({ type: "auth/add", email: cred.user.email });
-          this.$refs.form.reset();
-          this.$router.push({ name: "start" });
+      this.buttonLoading = true;
+      this.$store
+        .dispatch({
+          type: "auth/addUser",
+          email: this.email,
+          password: this.password,
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .then(() => {
+          this.$refs.form.reset();
+          this.buttonLoading = false;
+          this.$router.push({ name: "user" });
+        })
+        .catch((err) => console.log(err));
     },
   },
 };

@@ -68,8 +68,8 @@ export default {
         },
         {
           icon: "mdi-chart-bubble",
-          title: "Start",
-          to: "/start",
+          title: "User",
+          to: "/user",
         },
         {
           icon: "mdi-account-plus",
