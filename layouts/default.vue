@@ -71,6 +71,16 @@ export default {
           title: "Start",
           to: "/start",
         },
+        {
+          icon: "mdi-account-plus",
+          title: "Register",
+          to: "/register",
+        },
+        {
+          icon: "mdi-login",
+          title: "Login",
+          to: "/login",
+        },
       ],
       miniVariant: false,
       right: true,

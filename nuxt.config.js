@@ -1,4 +1,5 @@
 import colors from "vuetify/es5/util/colors";
+require("dotenv").config();
 
 export default {
   mode: "universal",
@@ -34,11 +35,30 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/vuetify"],
+  buildModules: ["@nuxtjs/dotenv", "@nuxtjs/vuetify"],
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: [
+    [
+      "@nuxtjs/firebase",
+      {
+        config: {
+          apiKey: process.env.apiKey,
+          authDomain: "web-dev-wannabe.firebaseapp.com",
+          databaseURL: "https://web-dev-wannabe.firebaseio.com",
+          projectId: "web-dev-wannabe",
+          storageBucket: "web-dev-wannabe.appspot.com",
+          messagingSenderId: process.env.messagingSenderId,
+          appId: process.env.appId,
+          measurementId: process.env.measurementId,
+        },
+        services: {
+          auth: true, // Just as example. Can be any other service.
+        },
+      },
+    ],
+  ],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
