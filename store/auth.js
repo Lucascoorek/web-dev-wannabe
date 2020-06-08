@@ -1,6 +1,7 @@
 export const state = () => ({
   user: {
     email: null,
+    error: null,
   },
 });
 
@@ -9,35 +10,44 @@ export const mutations = {
     state.user = {
       ...state.user,
       email: payload.email,
+      error: null,
     };
   },
   removeUser(state) {
-    state.user.email = null;
+    state.user = { ...state.user, email: null, error: null };
     console.log("logout");
+  },
+  addError(state, payload) {
+    state.user = {
+      ...state.user,
+      email: null,
+      error: payload,
+    };
   },
 };
 
 export const actions = {
   registerUser(context, payload) {
-    this.$fireAuth
-      .createUserWithEmailAndPassword(payload.email, payload.password)
-      .then((cred) => {
-        // context.commit({ type: "addUser", email: cred.user.email });
-        console.log("registered");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      this.$fireAuth
+        .createUserWithEmailAndPassword(payload.email, payload.password)
+        .then(() => resolve())
+        .catch((err) => {
+          context.commit("addError", err.message);
+          reject(err.message);
+        });
+    });
   },
   loginUser(context, payload) {
-    this.$fireAuth
-      .signInWithEmailAndPassword(payload.email, payload.password)
-      .then((cred) => {
-        console.log("loged in");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    return new Promise((resolve, reject) => {
+      this.$fireAuth
+        .signInWithEmailAndPassword(payload.email, payload.password)
+        .then(() => resolve())
+        .catch((err) => {
+          context.commit("addError", err.message);
+          reject(err.message);
+        });
+    });
   },
   removeUser(context) {
     this.$fireAuth.signOut().then(() => context.commit("removeUser"));

@@ -43,6 +43,12 @@
           >Submit</v-btn
         >
       </v-form>
+      <v-snackbar v-model="snackbar" color="error" top>
+        {{ snackbarText }}
+        <v-btn text @click="snackbar = false">
+          Close
+        </v-btn>
+      </v-snackbar>
     </v-col>
   </v-row>
 </template>
@@ -70,6 +76,8 @@ export default {
       counterOne: 0,
       counterTwo: 0,
       buttonLoading: false,
+      snackbar: false,
+      snackbarText: "",
     };
   },
   methods: {
@@ -86,7 +94,12 @@ export default {
           this.buttonLoading = false;
           this.$router.push({ name: "user" });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          this.$refs.form.reset();
+          this.buttonLoading = false;
+          this.snackbar = true;
+          this.snackbarText = err;
+        });
     },
   },
 };
