@@ -23,14 +23,30 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-if="user" @click="logout">
-          <v-list-item-action>
-            <v-icon>mdi-logout</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="'Logout'" />
-          </v-list-item-content>
-        </v-list-item>
+        <div v-if="user">
+          <v-list-item @click="logout">
+            <v-list-item-action>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="'Logout'" />
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            v-for="item in notAuthItems"
+            :key="item.title"
+            :to="item.to"
+            router
+            exact
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title" />
+            </v-list-item-content>
+          </v-list-item>
+        </div>
         <v-list-item
           v-for="item in authItems"
           v-else
@@ -87,13 +103,8 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Home",
-          to: "/",
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "User",
-          to: "/user",
+          title: "Start",
+          to: "/start",
         },
       ],
       authItems: [
@@ -106,6 +117,13 @@ export default {
           icon: "mdi-login",
           title: "Login",
           to: "/login",
+        },
+      ],
+      notAuthItems: [
+        {
+          icon: "mdi-chart-bubble",
+          title: "User",
+          to: "/user",
         },
       ],
       miniVariant: false,
@@ -121,8 +139,10 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch("auth/removeUser");
       this.drawer = false;
+      this.$store.dispatch("auth/removeUser").then(() => {
+        this.$router.push({ name: "start" });
+      });
     },
   },
 };

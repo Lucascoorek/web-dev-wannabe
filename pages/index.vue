@@ -8,7 +8,7 @@
         A social platform for newcomers to help each other get into web dev
         industry
       </p>
-      <v-btn color="accent" nuxt to="/user">Enter app</v-btn>
+      <v-btn color="accent" nuxt to="/start">Enter app</v-btn>
     </v-col>
   </v-row>
 </template>

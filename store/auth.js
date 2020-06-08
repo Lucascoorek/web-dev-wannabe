@@ -50,6 +50,17 @@ export const actions = {
     });
   },
   removeUser(context) {
-    this.$fireAuth.signOut().then(() => context.commit("removeUser"));
+    return new Promise((resolve, reject) => {
+      this.$fireAuth
+        .signOut()
+        .then(() => {
+          context.commit("removeUser");
+          resolve();
+        })
+        .catch((err) => {
+          context.commit("addError", err.message);
+          reject(err.message);
+        });
+    });
   },
 };
