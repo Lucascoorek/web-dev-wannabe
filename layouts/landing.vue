@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <v-content>
       <v-container class="fill-height">
         <nuxt />
@@ -9,7 +9,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "Landing",
+};
 </script>
 
 <style scoped></style>

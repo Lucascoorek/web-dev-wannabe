@@ -77,7 +77,7 @@ export default {
       this.buttonLoading = true;
       this.$store
         .dispatch({
-          type: "auth/addUser",
+          type: "auth/registerUser",
           email: this.email,
           password: this.password,
         })

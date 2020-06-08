@@ -23,6 +23,29 @@
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
+        <v-list-item v-if="user" @click="logout">
+          <v-list-item-action>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="'Logout'" />
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item
+          v-for="item in authItems"
+          v-else
+          :key="item.title"
+          :to="item.to"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title" />
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar :clipped-left="clipped" fixed app>
@@ -55,6 +78,7 @@
 
 <script>
 export default {
+  name: "Default",
   data() {
     return {
       clipped: false,
@@ -71,6 +95,8 @@ export default {
           title: "User",
           to: "/user",
         },
+      ],
+      authItems: [
         {
           icon: "mdi-account-plus",
           title: "Register",
@@ -87,6 +113,17 @@ export default {
       rightDrawer: false,
       title: "Web Dev Wananbe",
     };
+  },
+  computed: {
+    user() {
+      return this.$store.state.auth.user.email;
+    },
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("auth/removeUser");
+      this.drawer = false;
+    },
   },
 };
 </script>
