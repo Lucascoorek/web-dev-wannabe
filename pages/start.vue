@@ -12,11 +12,18 @@ export default {
     },
   },
   created() {
-    this.$fireAuth.onAuthStateChanged((user) => {
-      if (user) {
-        this.$store.commit({ type: "auth/addUser", email: user.email });
-      }
-    });
+    if (this.user) {
+      this.$fireStore
+        .collection("posts")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            console.log(doc.id);
+            const data = doc.data();
+            console.log(data);
+          });
+        });
+    }
   },
 };
 </script>

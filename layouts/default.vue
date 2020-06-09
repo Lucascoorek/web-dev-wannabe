@@ -1,13 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
-      right
-      app
-    >
+    <v-navigation-drawer v-model="drawer" fixed right app>
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -64,19 +57,10 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar fixed app>
       <v-switch v-model="$vuetify.theme.dark" hide-details inset></v-switch>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="clipped = !clipped">
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>mdi-auto-fix</v-icon></v-btn
-      >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
     </v-app-bar>
     <v-content>
@@ -84,7 +68,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer fixed app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
       <v-spacer />
       <span>{{ title }}</span>
@@ -97,9 +81,7 @@ export default {
   name: "Default",
   data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
       items: [
         {
           icon: "mdi-apps",
@@ -126,7 +108,6 @@ export default {
           to: "/user",
         },
       ],
-      miniVariant: false,
       right: true,
       rightDrawer: false,
       title: "Web Dev Wananbe",
