@@ -38,6 +38,14 @@
           Close
         </v-btn>
       </v-snackbar>
+      <div class="social">
+        <p class="mt-4 title font-weight-light">
+          Login with:
+        </p>
+        <div @click="githubLogin">
+          <v-icon x-large>mdi-github</v-icon>
+        </div>
+      </div>
     </v-col>
   </v-row>
 </template>
@@ -60,6 +68,37 @@ export default {
       snackbarText: "",
     };
   },
+  created() {
+    this.buttonLoading = true;
+    this.$fireAuth
+      .getRedirectResult()
+      .then((result) => {
+        if (result.credential) {
+          // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+          var token = result.credential.accessToken;
+        }
+        // The signed-in user info.
+        var user = result.user;
+        this.$store.commit({ type: "auth/addUser", email: user.email });
+        this.buttonLoading = false;
+        this.$router.push({ name: "user" });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+        if (errorCode === "auth/account-exists-with-different-credential") {
+          this.snackbar = true;
+          this.snackbarText = "An account already exists with the same email";
+        }
+        this.buttonLoading = false;
+      });
+  },
   methods: {
     submit() {
       this.buttonLoading = true;
@@ -81,8 +120,20 @@ export default {
           this.snackbarText = err;
         });
     },
+    githubLogin() {
+      const provider = new this.$fireAuthObj.GithubAuthProvider();
+      this.$fireAuth.signInWithRedirect(provider);
+    },
   },
 };
 </script>
 
-<style></style>
+<style scoped>
+.social i {
+  cursor: pointer;
+}
+.social i:hover,
+.social i:focus {
+  color: var(--v-primary-base);
+}
+</style>
