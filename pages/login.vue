@@ -10,8 +10,7 @@
           :rules="emailRules"
           required
           outlined
-        >
-        </v-text-field>
+        ></v-text-field>
         <v-text-field
           v-model="password"
           class="mb-1"
@@ -21,31 +20,27 @@
           :counter="counterOne"
           required
           outlined
-        >
-        </v-text-field>
-        <v-btn
-          :loading="buttonLoading"
-          :disabled="!valid"
-          type="submit"
-          x-large
-          block
-          >Submit</v-btn
-        >
+        ></v-text-field>
+        <v-btn :loading="buttonLoading" :disabled="!valid" type="submit" x-large block>Submit</v-btn>
       </v-form>
       <v-snackbar v-model="snackbar" color="error" top>
         {{ snackbarText }}
-        <v-btn text @click="snackbar = false">
-          Close
-        </v-btn>
+        <v-btn text @click="snackbar = false">Close</v-btn>
       </v-snackbar>
       <div class="social">
-        <p class="mt-4 title font-weight-light">
-          Login with:
-        </p>
+        <p class="mt-4 title font-weight-light">Login with:</p>
         <div @click="githubLogin">
           <v-icon x-large>mdi-github</v-icon>
         </div>
       </div>
+      <v-dialog v-model="dialog" hide-overlay persistent width="300">
+        <v-card color="primary" dark>
+          <v-card-text>
+            Please stand by
+            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
     </v-col>
   </v-row>
 </template>
@@ -66,10 +61,11 @@ export default {
       buttonLoading: false,
       snackbar: false,
       snackbarText: "",
+      dialog: false,
     };
   },
   created() {
-    this.buttonLoading = true;
+    this.dialog = true;
     this.$fireAuth
       .getRedirectResult()
       .then((result) => {
@@ -80,7 +76,7 @@ export default {
         // The signed-in user info.
         var user = result.user;
         this.$store.commit({ type: "auth/addUser", email: user.email });
-        this.buttonLoading = false;
+        this.dialog = false;
         this.$router.push({ name: "user" });
       })
       .catch((error) => {
@@ -96,7 +92,7 @@ export default {
           this.snackbar = true;
           this.snackbarText = "An account already exists with the same email";
         }
-        this.buttonLoading = false;
+        this.dialog = false;
       });
   },
   methods: {
