@@ -18,13 +18,13 @@
               <v-list-item :key="item.id">
                 <template v-slot:default="{ active, toggle }">
                   <v-list-item-content>
-                    <v-list-item-title v-text="item.data.title"></v-list-item-title>
-                    <v-list-item-subtitle class="text--primary" v-text="item.data.title"></v-list-item-subtitle>
-                    <v-list-item-subtitle v-text="item.data.title"></v-list-item-subtitle>
+                    <v-list-item-title v-text="item.title"></v-list-item-title>
+                    <v-list-item-subtitle class="text--primary" v-text="item.title"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-text="item.title"></v-list-item-subtitle>
                   </v-list-item-content>
 
                   <v-list-item-action>
-                    <v-list-item-action-text v-text="item.data.date.seconds"></v-list-item-action-text>
+                    <v-list-item-action-text v-text="item.date"></v-list-item-action-text>
                     <v-icon v-if="!active" color="grey lighten-1">mdi-star-circle-outline</v-icon>
 
                     <v-icon v-else color="yellow">mdi-star-circle</v-icon>
@@ -61,8 +61,11 @@ export default {
         .then((querySnapshot) => {
           const posts = [];
           querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            posts.push({ id: doc.id, data });
+            const { title, content, date } = doc.data();
+            const dateToJs = new Date(date.toDate())
+              .toISOString()
+              .split("T")[0];
+            posts.push({ id: doc.id, title, content, date: dateToJs });
           });
           this.$store.commit({
             type: "posts/addPosts",
