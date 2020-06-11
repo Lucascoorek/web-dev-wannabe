@@ -33,19 +33,12 @@
           <v-icon x-large>mdi-github</v-icon>
         </div>
       </div>
-      <v-dialog v-model="dialog" hide-overlay persistent width="300">
-        <v-card color="primary" dark>
-          <v-card-text>
-            Please stand by
-            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -61,11 +54,15 @@ export default {
       buttonLoading: false,
       snackbar: false,
       snackbarText: "",
-      dialog: false,
     };
   },
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user.email,
+    }),
+  },
   created() {
-    this.dialog = true;
+    this.$store.commit("auth/setLoading", true);
     this.$fireAuth
       .getRedirectResult()
       .then((result) => {
@@ -76,7 +73,6 @@ export default {
         // The signed-in user info.
         var user = result.user;
         this.$store.commit({ type: "auth/addUser", email: user.email });
-        this.dialog = false;
         this.$router.push({ name: "user" });
       })
       .catch((error) => {
@@ -92,7 +88,7 @@ export default {
           this.snackbar = true;
           this.snackbarText = "An account already exists with the same email";
         }
-        this.dialog = false;
+        this.$store.commit("auth/setLoading", false);
       });
   },
   methods: {

@@ -2,6 +2,7 @@ export const state = () => ({
   user: {
     email: null,
     error: null,
+    loading: false,
   },
 });
 
@@ -11,18 +12,22 @@ export const mutations = {
       ...state.user,
       email: payload.email,
       error: null,
+      loading: false,
     };
   },
   removeUser(state) {
-    state.user = { ...state.user, email: null, error: null };
-    console.log("logout");
+    state.user = { ...state.user, email: null, error: null, loading: false };
   },
   addError(state, payload) {
     state.user = {
       ...state.user,
       email: null,
       error: payload,
+      loading: false,
     };
+  },
+  setLoading(state, payload) {
+    state.user.loading = payload;
   },
 };
 
