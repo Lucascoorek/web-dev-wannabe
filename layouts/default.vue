@@ -3,7 +3,13 @@
     <v-app dark>
       <v-navigation-drawer v-model="drawer" fixed right app>
         <v-list>
-          <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+          <v-list-item
+            v-for="(item, i) in items"
+            :key="i"
+            :to="item.to"
+            router
+            exact
+          >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -20,7 +26,13 @@
                 <v-list-item-title v-text="'Logout'" />
               </v-list-item-content>
             </v-list-item>
-            <v-list-item v-for="item in notAuthItems" :key="item.title" :to="item.to" router exact>
+            <v-list-item
+              v-for="item in notAuthItems"
+              :key="item.title"
+              :to="item.to"
+              router
+              exact
+            >
               <v-list-item-action>
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-action>
@@ -54,7 +66,7 @@
       </v-app-bar>
       <v-content>
         <v-container>
-          <nuxt />
+          <nuxt keep-alive />
         </v-container>
       </v-content>
       <v-footer fixed app>
@@ -67,7 +79,11 @@
       <v-card color="primary" dark>
         <v-card-text>
           Please stand by
-          <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
+          <v-progress-linear
+            indeterminate
+            color="white"
+            class="mb-0"
+          ></v-progress-linear>
         </v-card-text>
       </v-card>
     </v-dialog>
