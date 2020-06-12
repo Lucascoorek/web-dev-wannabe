@@ -7,6 +7,9 @@
         <v-toolbar color="pink" dark>
           <v-toolbar-title>Posts</v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-btn icon @click.stop="showAddPostModal = true">
+            <v-icon>mdi-email-plus</v-icon>
+          </v-btn>
           <v-btn icon>
             <v-icon>mdi-magnify</v-icon>
           </v-btn>
@@ -70,12 +73,17 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <AddPostDialog v-model="showAddPostModal" />
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import AddPostDialog from "@/components/addPostDialog";
 
 export default {
+  components: {
+    AddPostDialog,
+  },
   fetch() {
     if (this.user) {
       this.$store.commit("posts/setLoading", true);
@@ -99,7 +107,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      showAddPostModal: false,
+    };
   },
   computed: {
     ...mapState({
@@ -108,12 +118,12 @@ export default {
       loading: (state) => state.posts.loading,
     }),
   },
-  activated() {
-    // Call fetch again if last fetch more than 30 sec ago
-    if (this.$fetchState.timestamp <= Date.now() - 30000) {
-      this.$fetch();
-    }
-  },
+  // activated() {
+  //   // Call fetch again if last fetch more than 30 sec ago
+  //   if (this.$fetchState.timestamp <= Date.now() - 30000) {
+  //     this.$fetch();
+  //   }
+  // },
 };
 </script>
 <style scoped></style>

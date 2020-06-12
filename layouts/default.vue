@@ -66,7 +66,7 @@
       </v-app-bar>
       <v-content>
         <v-container>
-          <nuxt keep-alive />
+          <nuxt />
         </v-container>
       </v-content>
       <v-footer fixed app>
