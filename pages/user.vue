@@ -7,15 +7,29 @@
 <script>
 export default {
   middleware: "router-auth",
-  computed: {
-    user() {
-      return this.$store.state.auth.user.email;
-    },
+  // async asyncData({ app }) {
+  //   const user = await app.$$fireAuth.currentUser;
+  //   return {
+  //     user: user.email,
+  //   };
+  // },
+
+  asyncData() {
+    return {
+      user: null,
+    };
   },
+  // computed: {
+  //   user() {
+  //     return this.$store.state.auth.user.email;
+  //   },
+  // },
+
   created() {
     this.$fireAuth.onAuthStateChanged((user) => {
       if (user) {
-        this.$store.commit({ type: "auth/addUser", email: user.email });
+        // this.$store.commit({ type: "auth/addUser", email: user.email });
+        this.user = user.email;
       }
     });
   },

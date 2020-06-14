@@ -54,7 +54,12 @@ export default {
           measurementId: process.env.measurementId,
         },
         services: {
-          auth: true, // Just as example. Can be any other service.
+          auth: {
+            initialize: {
+              onAuthStateChangedAction: "onAuthStateChanged",
+            },
+            ssr: true,
+          },
           firestore: true,
         },
         analytics: true,
@@ -67,6 +72,7 @@ export default {
    */
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
+    ssr: true,
     theme: {
       dark: true,
       options: {
@@ -94,4 +100,7 @@ export default {
      */
     extend(config, ctx) {},
   },
+  // router: {
+  //   middleware: ["router-auth"],
+  // },
 };

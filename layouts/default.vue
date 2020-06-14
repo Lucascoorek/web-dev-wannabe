@@ -94,8 +94,15 @@
 import { mapState } from "vuex";
 export default {
   name: "Default",
+  // async asyncData({ app }) {
+  //   const user = await app.$$fireAuth.currentUser;
+  //   return {
+  //     user: user.email,
+  //   };
+  // },
   data() {
     return {
+      user: null,
       dialog: true,
       drawer: false,
       items: [
@@ -129,15 +136,25 @@ export default {
       title: "Web Dev Wananbe",
     };
   },
+
   computed: {
     ...mapState({
-      user: (state) => state.auth.user.email,
+      // user: (state) => state.auth.user.email,
       loading: (state) => state.auth.user.loading,
     }),
+  },
+  created() {
+    this.$fireAuth.onAuthStateChanged((user) => {
+      if (user) {
+        // this.$store.commit({ type: "auth/addUser", email: user.email });
+        this.user = user.email;
+      }
+    });
   },
   methods: {
     logout() {
       this.drawer = false;
+      this.user = null;
       this.$store.dispatch("auth/removeUser").then(() => {
         this.$router.push({ name: "start" });
       });

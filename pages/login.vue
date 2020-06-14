@@ -21,7 +21,14 @@
           required
           outlined
         ></v-text-field>
-        <v-btn :loading="buttonLoading" :disabled="!valid" type="submit" x-large block>Submit</v-btn>
+        <v-btn
+          :loading="buttonLoading"
+          :disabled="!valid"
+          type="submit"
+          x-large
+          block
+          >Submit</v-btn
+        >
       </v-form>
       <v-snackbar v-model="snackbar" color="error" top>
         {{ snackbarText }}
@@ -73,7 +80,7 @@ export default {
         // The signed-in user info.
         var user = result.user;
         this.$store.commit({ type: "auth/addUser", email: user.email });
-        this.$router.push({ name: "user" });
+        this.$router.push({ name: "start" });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -103,7 +110,7 @@ export default {
         .then(() => {
           this.$refs.form.reset();
           this.buttonLoading = false;
-          this.$router.push({ name: "user" });
+          this.$router.push({ name: "start" });
         })
         .catch((err) => {
           this.$refs.form.reset();

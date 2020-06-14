@@ -32,7 +32,7 @@
                     <v-list-item-title v-text="item.title"></v-list-item-title>
                     <v-list-item-subtitle
                       class="text--primary"
-                      v-text="item.title"
+                      v-text="item.content"
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle
                       v-text="item.title"
@@ -84,46 +84,59 @@ export default {
   components: {
     AddPostDialog,
   },
-  fetch() {
-    if (this.user) {
-      this.$store.commit("posts/setLoading", true);
-      this.$fireStore
-        .collection("posts")
-        .get()
-        .then((querySnapshot) => {
-          const posts = [];
-          querySnapshot.forEach((doc) => {
-            const { title, content, date } = doc.data();
-            const dateToJs = new Date(date.toDate())
-              .toISOString()
-              .split("T")[0];
-            posts.push({ id: doc.id, title, content, date: dateToJs });
-          });
-          this.$store.commit({
-            type: "posts/addPosts",
-            posts,
-          });
-        });
-    }
+  asyncData() {
+    return {
+      posts: [],
+      user: null,
+      loading: false,
+    };
   },
+
   data() {
     return {
       showAddPostModal: false,
     };
   },
+
   computed: {
     ...mapState({
-      user: (state) => state.auth.user.email,
-      posts: (state) => state.posts.posts,
-      loading: (state) => state.posts.loading,
+      // user: (state) => state.auth.user.email,
+      // posts: (state) => state.posts.posts,
+      // loading: (state) => state.posts.loading,
     }),
   },
-  // activated() {
-  //   // Call fetch again if last fetch more than 30 sec ago
-  //   if (this.$fetchState.timestamp <= Date.now() - 30000) {
-  //     this.$fetch();
-  //   }
-  // },
+
+  created() {
+    this.$fireAuth.onAuthStateChanged((user) => {
+      if (user) {
+        this.user = user.email;
+        // this.$store.commit({ type: "auth/addUser", email: user.email });
+        this.$store.commit("posts/setLoading", true);
+        this.loading = true;
+        this.$fireStore
+          .collection("posts")
+          .get()
+          .then((querySnapshot) => {
+            const posts = [];
+
+            querySnapshot.forEach((doc) => {
+              const { title, content, date } = doc.data();
+              const dateToJs = new Date(date.toDate())
+                .toISOString()
+                .split("T")[0];
+              posts.push({ id: doc.id, title, content, date: dateToJs });
+            });
+
+            this.posts = posts;
+            this.loading = false;
+            this.$store.commit({
+              type: "posts/addPosts",
+              posts,
+            });
+          });
+      }
+    });
+  },
 };
 </script>
 <style scoped></style>
