@@ -37,6 +37,7 @@ export const actions = {
       commit("auth/removeUser");
       return;
     }
+
     commit("auth/addUser", authUser);
   },
 };

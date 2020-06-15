@@ -156,7 +156,7 @@ export default {
       this.drawer = false;
       this.user = null;
       this.$store.dispatch("auth/removeUser").then(() => {
-        this.$router.push({ name: "start" });
+        this.$router.push({ name: "login" });
       });
     },
   },

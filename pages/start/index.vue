@@ -88,13 +88,14 @@ export default {
     return {
       posts: [],
       user: null,
-      loading: false,
+      // loading: false,
     };
   },
 
   data() {
     return {
       showAddPostModal: false,
+      unsubscribe: null,
     };
   },
 
@@ -102,7 +103,7 @@ export default {
     ...mapState({
       // user: (state) => state.auth.user.email,
       // posts: (state) => state.posts.posts,
-      // loading: (state) => state.posts.loading,
+      loading: (state) => state.posts.loading,
     }),
   },
 
@@ -112,11 +113,9 @@ export default {
         this.user = user.email;
         // this.$store.commit({ type: "auth/addUser", email: user.email });
         this.$store.commit("posts/setLoading", true);
-        this.loading = true;
-        this.$fireStore
-          .collection("posts")
-          .get()
-          .then((querySnapshot) => {
+        // this.loading = true;
+        this.unsubscribe = this.$fireStore.collection("posts").onSnapshot(
+          (querySnapshot) => {
             const posts = [];
 
             querySnapshot.forEach((doc) => {
@@ -128,12 +127,16 @@ export default {
             });
 
             this.posts = posts;
-            this.loading = false;
+            // this.loading = false;
             this.$store.commit({
               type: "posts/addPosts",
               posts,
             });
-          });
+          },
+          (err) => {
+            if (this.unsubscribe) this.unsubscribe();
+          }
+        );
       }
     });
   },

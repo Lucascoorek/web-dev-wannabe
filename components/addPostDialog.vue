@@ -2,7 +2,7 @@
   <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
-        <v-form ref="form" @submit.prevent="submit">
+        <v-form ref="form" v-model="valid" @submit.prevent="submit">
           <v-card-title>
             <span class="headline">Add post</span>
           </v-card-title>
@@ -14,11 +14,16 @@
                     v-model="title"
                     label="Post title"
                     hint="Add a meaningful title"
+                    :rules="titleRules"
                     required
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
-                  <v-textarea v-model="content" label="Post content">
+                  <v-textarea
+                    v-model="content"
+                    :rules="titleRules"
+                    label="Post content"
+                  >
                   </v-textarea>
                 </v-col>
               </v-row>
@@ -27,7 +32,14 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="resetForm">Cancel</v-btn>
-            <v-btn type="submit" color="blue darken-1" text>Save</v-btn>
+            <v-btn
+              type="submit"
+              :loading="buttonLoading"
+              :disabled="!valid"
+              color="blue darken-1"
+              text
+              >Save</v-btn
+            >
           </v-card-actions>
         </v-form>
       </v-card>
@@ -36,6 +48,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "AddPostDialog",
   props: {
@@ -43,7 +56,10 @@ export default {
   },
   data() {
     return {
+      buttonLoading: false,
+      valid: false,
       title: "",
+      titleRules: [(v) => !!v || "Tile is required"],
       content: "",
     };
   },
@@ -56,6 +72,11 @@ export default {
         this.$emit("input", value);
       },
     },
+    ...mapState({
+      user: (state) => state.auth.user.email,
+      // posts: (state) => state.posts.posts,
+      // loading: (state) => state.posts.loading,
+    }),
   },
   methods: {
     resetForm() {
@@ -63,8 +84,22 @@ export default {
       this.dialog = false;
     },
     submit() {
-      console.log({ title: this.title, content: this.content });
-      this.resetForm();
+      if (this.user) {
+        this.buttonLoading = true;
+        this.$fireStore
+          .collection("posts")
+          .add({
+            title: this.title,
+            content: this.content,
+            date: this.$fireStoreObj.Timestamp.fromDate(new Date()),
+          })
+          .then((docRef) => {
+            console.log(docRef.id);
+            this.buttonLoading = false;
+            this.resetForm();
+          })
+          .catch((err) => console.log(err));
+      }
     },
   },
 };
