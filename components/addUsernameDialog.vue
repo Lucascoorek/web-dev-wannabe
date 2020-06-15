@@ -3,28 +3,17 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
       <v-card>
         <v-form ref="form" v-model="valid" @submit.prevent="submit">
-          <v-card-title>
-            <span class="headline">Add post</span>
-          </v-card-title>
           <v-card-text>
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field
                     v-model="title"
-                    label="Post title"
-                    hint="Add a meaningful title"
+                    label="Add your position"
+                    hint="Wannabe/Junior/Regular/Senior?"
                     :rules="titleRules"
                     required
                   ></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6" md="4">
-                  <v-textarea
-                    v-model="content"
-                    :rules="titleRules"
-                    label="Post content"
-                  >
-                  </v-textarea>
                 </v-col>
               </v-row>
             </v-container>
@@ -59,8 +48,7 @@ export default {
       buttonLoading: false,
       valid: false,
       title: "",
-      titleRules: [(v) => !!v || "Tile is required"],
-      content: "",
+      titleRules: [(v) => !!v || "Position is required"],
     };
   },
   computed: {
@@ -73,7 +61,7 @@ export default {
       },
     },
     ...mapState({
-      user: (state) => state.auth.user.email,
+      user: (state) => state.auth.user,
       // posts: (state) => state.posts.posts,
       // loading: (state) => state.posts.loading,
     }),
@@ -87,14 +75,12 @@ export default {
       if (this.user) {
         this.buttonLoading = true;
         this.$fireStore
-          .collection("posts")
-          .add({
-            title: this.title,
-            content: this.content,
-            date: this.$fireStoreObj.Timestamp.fromDate(new Date()),
+          .collection("users")
+          .doc(this.user.uid)
+          .set({
+            position: this.title,
           })
-          .then((docRef) => {
-            // console.log(docRef.id);
+          .then(() => {
             this.buttonLoading = false;
             this.resetForm();
           })

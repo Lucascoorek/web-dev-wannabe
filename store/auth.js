@@ -3,6 +3,7 @@ export const state = () => ({
     email: null,
     error: null,
     loading: false,
+    uid: null,
   },
 });
 
@@ -11,12 +12,19 @@ export const mutations = {
     state.user = {
       ...state.user,
       email: payload.email,
+      uid: payload.uid,
       error: null,
       loading: false,
     };
   },
   removeUser(state) {
-    state.user = { ...state.user, email: null, error: null, loading: false };
+    state.user = {
+      ...state.user,
+      email: null,
+      error: null,
+      loading: false,
+      uid: null,
+    };
   },
   addError(state, payload) {
     state.user = {
@@ -24,6 +32,7 @@ export const mutations = {
       email: null,
       error: payload,
       loading: false,
+      uid: null,
     };
   },
   setLoading(state, payload) {

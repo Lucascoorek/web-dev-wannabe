@@ -1,12 +1,23 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <h1 class="display-2 font-weight-light">User</h1>
-    <p v-if="user">{{ user }}</p>
+    <div v-if="user" class="text-center">
+      <h1 class="font-weight-light">{{ user.email }}</h1>
+      <p>Youre positon: {{ user.position }}</p>
+      <v-btn icon @click.stop="showUsernameModal = true">
+        <v-icon>mdi-account-edit</v-icon>
+      </v-btn>
+      <AddUsernameDialog v-model="showUsernameModal" />
+    </div>
   </div>
 </template>
 <script>
+import AddUsernameDialog from "@/components/addUsernameDialog";
 export default {
   middleware: "router-auth",
+  components: {
+    AddUsernameDialog,
+  },
   // async asyncData({ app }) {
   //   const user = await app.$$fireAuth.currentUser;
   //   return {
@@ -19,6 +30,12 @@ export default {
       user: null,
     };
   },
+  data() {
+    return {
+      showUsernameModal: false,
+      unsubscribe: null,
+    };
+  },
   // computed: {
   //   user() {
   //     return this.$store.state.auth.user.email;
@@ -28,8 +45,18 @@ export default {
   created() {
     this.$fireAuth.onAuthStateChanged((user) => {
       if (user) {
-        // this.$store.commit({ type: "auth/addUser", email: user.email });
-        this.user = user.email;
+        this.user = user;
+        this.unsubscribe = this.$fireStore
+          .collection("users")
+          .doc(user.uid)
+          .onSnapshot(
+            (doc) => {
+              this.user.position = doc.data().position;
+            },
+            (err) => {
+              if (this.unsubscribe) this.unsubscribe();
+            }
+          );
       }
     });
   },
