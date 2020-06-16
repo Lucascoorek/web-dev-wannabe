@@ -4,6 +4,7 @@ export const state = () => ({
     error: null,
     loading: false,
     uid: null,
+    position: null,
   },
 });
 
@@ -24,6 +25,7 @@ export const mutations = {
       error: null,
       loading: false,
       uid: null,
+      position: null,
     };
   },
   addError(state, payload) {
@@ -33,10 +35,14 @@ export const mutations = {
       error: payload,
       loading: false,
       uid: null,
+      position: null,
     };
   },
   setLoading(state, payload) {
     state.user.loading = payload;
+  },
+  addUserPosition(state, payload) {
+    state.user.position = payload;
   },
 };
 

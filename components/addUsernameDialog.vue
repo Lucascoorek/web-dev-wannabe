@@ -72,7 +72,7 @@ export default {
       this.dialog = false;
     },
     submit() {
-      if (this.user) {
+      if (this.user.uid) {
         this.buttonLoading = true;
         this.$fireStore
           .collection("users")
