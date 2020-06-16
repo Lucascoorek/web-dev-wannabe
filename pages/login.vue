@@ -79,11 +79,19 @@ export default {
         }
         // The signed-in user info.
         var user = result.user;
-        this.$store.commit({
-          type: "auth/addUser",
-          email: user.email,
-          uid: user.uid,
-        });
+        this.$fireStore
+          .collection("users")
+          .doc(user.uid)
+          .set({
+            email: user.email,
+          })
+          .then(() => {
+            this.$store.commit({
+              type: "auth/addUser",
+              email: user.email,
+              uid: user.uid,
+            });
+          });
         this.$router.push({ name: "start" });
       })
       .catch((error) => {

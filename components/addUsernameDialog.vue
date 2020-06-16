@@ -77,9 +77,12 @@ export default {
         this.$fireStore
           .collection("users")
           .doc(this.user.uid)
-          .set({
-            position: this.title,
-          })
+          .set(
+            {
+              position: this.title,
+            },
+            { merge: true }
+          )
           .then(() => {
             this.buttonLoading = false;
             this.resetForm();

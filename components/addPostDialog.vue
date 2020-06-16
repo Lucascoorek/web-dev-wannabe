@@ -73,7 +73,7 @@ export default {
       },
     },
     ...mapState({
-      user: (state) => state.auth.user.email,
+      user: (state) => state.auth.user,
       // posts: (state) => state.posts.posts,
       // loading: (state) => state.posts.loading,
     }),
@@ -84,7 +84,7 @@ export default {
       this.dialog = false;
     },
     submit() {
-      if (this.user) {
+      if (this.user.uid) {
         this.buttonLoading = true;
         this.$fireStore
           .collection("posts")
@@ -92,6 +92,7 @@ export default {
             title: this.title,
             content: this.content,
             date: this.$fireStoreObj.Timestamp.fromDate(new Date()),
+            userId: this.user.uid,
           })
           .then((docRef) => {
             // console.log(docRef.id);

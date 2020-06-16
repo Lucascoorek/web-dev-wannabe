@@ -51,6 +51,14 @@ export const actions = {
     return new Promise((resolve, reject) => {
       this.$fireAuth
         .createUserWithEmailAndPassword(payload.email, payload.password)
+        .then((data) => {
+          const {
+            user: { email, uid },
+          } = data;
+          return this.$fireStore.collection("users").doc(uid).set({
+            email,
+          });
+        })
         .then(() => resolve())
         .catch((err) => {
           context.commit("addError", err.message);

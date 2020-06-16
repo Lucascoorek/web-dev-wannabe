@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <h1 class="display-2 font-weight-light">Start</h1>
-    <div v-if="user">
-      <p>{{ user }}</p>
+    <div v-if="user.email">
+      <p>{{ user.email }}</p>
       <v-card max-width="500" class="mx-auto">
         <v-toolbar color="pink" dark>
           <v-toolbar-title>Posts</v-toolbar-title>
@@ -87,8 +87,10 @@ export default {
   asyncData() {
     return {
       posts: [],
-      user: null,
-      // loading: false,
+      user: {
+        email: null,
+      },
+      loading: false,
     };
   },
 
@@ -101,33 +103,40 @@ export default {
 
   computed: {
     ...mapState({
-      // user: (state) => state.auth.user.email,
+      // user: (state) => state.auth.user,
       // posts: (state) => state.posts.posts,
-      loading: (state) => state.posts.loading,
+      // loading: (state) => state.posts.loading,
     }),
   },
 
   created() {
     this.$fireAuth.onAuthStateChanged((user) => {
       if (user) {
-        this.user = user.email;
+        this.user = user;
         // this.$store.commit({ type: "auth/addUser", email: user.email });
-        this.$store.commit("posts/setLoading", true);
-        // this.loading = true;
+        // this.$store.commit("posts/setLoading", true);
+        this.loading = true;
         this.unsubscribe = this.$fireStore.collection("posts").onSnapshot(
           (querySnapshot) => {
             const posts = [];
 
             querySnapshot.forEach((doc) => {
-              const { title, content, date } = doc.data();
+              const { title, content, date, userId } = doc.data();
+              // this.$fireStore.collection("").
               const dateToJs = new Date(date.toDate())
                 .toISOString()
                 .split("T")[0];
-              posts.push({ id: doc.id, title, content, date: dateToJs });
+              posts.push({
+                id: doc.id,
+                title,
+                content,
+                date: dateToJs,
+                userId,
+              });
             });
 
             this.posts = posts;
-            // this.loading = false;
+            this.loading = false;
             this.$store.commit({
               type: "posts/addPosts",
               posts,
