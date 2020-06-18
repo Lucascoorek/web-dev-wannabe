@@ -68,9 +68,10 @@ export default {
       user: (state) => state.auth.user.email,
     }),
   },
-  created() {
+  beforeCreate() {
     this.$store.commit("auth/setLoading", true);
-
+  },
+  created() {
     this.$fireAuth
       .getRedirectResult()
       .then((result) => {

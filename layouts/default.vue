@@ -156,6 +156,7 @@ export default {
       this.drawer = false;
       this.user = null;
       this.$store.dispatch("auth/removeUser").then(() => {
+        this.$store.commit("users/removeUser");
         this.$router.push({ name: "login" });
       });
     },

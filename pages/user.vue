@@ -14,7 +14,7 @@
 <script>
 import AddUsernameDialog from "@/components/addUsernameDialog";
 export default {
-  // middleware: "router-auth",
+  middleware: "router-auth",
   components: {
     AddUsernameDialog,
   },
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     position() {
-      return this.$store.state.auth.user.position;
+      return this.$store.state.users.user.position;
     },
   },
 
@@ -52,8 +52,8 @@ export default {
           .doc(user.uid)
           .onSnapshot(
             (doc) => {
-              if (doc.data() && doc.data().position) {
-                this.$store.commit("auth/addUserPosition", doc.data().position);
+              if (doc.data() && doc.data()) {
+                this.$store.commit("users/addUser", doc.data());
                 // this.user.position = doc.data().position;
               }
             },
