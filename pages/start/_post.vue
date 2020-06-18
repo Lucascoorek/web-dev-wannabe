@@ -1,13 +1,15 @@
 <template>
   <div>
-    <div v-if="post">
+    <div v-if="currentPost">
       <v-card>
-        <v-card-title>{{ post.title }}</v-card-title>
-        <v-card-subtitle>{{ post.userEmail }}</v-card-subtitle>
-        <v-card-text>{{ post.content }}</v-card-text>
+        <v-card-title>{{ currentPost.title }}</v-card-title>
+        <v-card-subtitle>{{ currentPost.userEmail }}</v-card-subtitle>
+        <v-card-text>{{ currentPost.content }}</v-card-text>
         <div class="primary--text">
           <v-card-text>
-            <p>{{ post.date.dateToJs }} {{ post.date.dateToTime }}</p>
+            <p>
+              {{ currentPost.date.dateToJs }} {{ currentPost.date.dateToTime }}
+            </p>
           </v-card-text>
         </div>
       </v-card>
@@ -15,17 +17,27 @@
     <div v-if="user && user.email">
       <v-card class="mt-3">
         <v-card-actions>
-          <v-btn text color="primary">
+          <v-btn text color="primary" @click.stop="showAddCommentModal = true">
             Add a comment
           </v-btn>
         </v-card-actions>
       </v-card>
     </div>
+    <AddCommentDialog v-model="showAddCommentModal" />
+    <div>
+      <p v-for="comment in currentPost.comments" :key="comment.id">
+        {{ comment.content }} <span>{{ comment.userEmail }}</span>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import AddCommentDialog from "@/components/addCommentDialog";
 export default {
+  components: {
+    AddCommentDialog,
+  },
   // middleware: "router-auth",
   // asyncData() {
   //   return {
@@ -34,15 +46,14 @@ export default {
   //     },
   //   };
   // },
-  // data() {
-  //   return {
-  //     user: {
-  //       email: null,
-  //     },
-  //   };
-  // },
+  data() {
+    return {
+      showAddCommentModal: false,
+      unsubscribe: null,
+    };
+  },
   computed: {
-    post() {
+    currentPost() {
       return this.$store.state.posts.currentPost;
     },
     user() {
@@ -50,9 +61,11 @@ export default {
     },
   },
   created() {
-    this.$fireStore
+    const postRef = this.$fireStore
       .collection("posts")
-      .doc(this.$route.params.post)
+      .doc(this.$route.params.post);
+
+    postRef
       .get()
       .then((doc) => {
         if (doc.exists) {
@@ -78,6 +91,37 @@ export default {
       .catch(function (error) {
         console.log("Error getting document:", error);
       });
+
+    postRef.collection("comments").onSnapshot(
+      (querySnapshot) => {
+        const comments = [];
+
+        querySnapshot.forEach((doc) => {
+          const { content, date, userEmail } = doc.data();
+          const dateToJs = new Date(date.toDate()).toISOString().split("T")[0];
+          const dateToTime = new Date(date.toDate())
+            .toISOString()
+            .split("T")[1]
+            .split(".")[0];
+          comments.push({
+            id: doc.id,
+            content,
+            date: { dateToJs, dateToTime },
+            userEmail,
+          });
+        });
+
+        this.loading = false;
+        this.$store.commit({
+          type: "posts/addComments",
+          comments,
+        });
+      },
+      (err) => {
+        if (this.unsubscribe) this.unsubscribe();
+      }
+    );
+
     this.$fireAuth.onAuthStateChanged((user) => {
       if (user) {
         // this.user = user;
