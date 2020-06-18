@@ -31,7 +31,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ["~/plugins/stringToUrl.js"],
   /*
    ** Nuxt.js dev-modules
    */

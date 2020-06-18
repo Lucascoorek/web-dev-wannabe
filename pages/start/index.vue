@@ -22,7 +22,10 @@
                 :key="item.id"
                 :to="{
                   name: 'start-post',
-                  params: { post: item.title.replace(/ /gi, '-'), id: item.id },
+                  params: {
+                    post: $stringToUrl(item.title),
+                    content: { ...item },
+                  },
                 }"
                 router
                 exact
@@ -121,7 +124,7 @@ export default {
             const posts = [];
 
             querySnapshot.forEach((doc) => {
-              const { title, content, date, userId } = doc.data();
+              const { title, content, date, userId, userEmail } = doc.data();
               // this.$fireStore.collection("").
               const dateToJs = new Date(date.toDate())
                 .toISOString()
@@ -132,6 +135,7 @@ export default {
                 content,
                 date: dateToJs,
                 userId,
+                userEmail,
               });
             });
 

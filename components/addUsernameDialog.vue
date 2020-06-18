@@ -79,7 +79,7 @@ export default {
           .doc(this.user.uid)
           .set(
             {
-              position: this.title,
+              position: this.title.trim(),
             },
             { merge: true }
           )

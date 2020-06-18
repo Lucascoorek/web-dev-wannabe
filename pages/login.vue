@@ -70,6 +70,7 @@ export default {
   },
   created() {
     this.$store.commit("auth/setLoading", true);
+
     this.$fireAuth
       .getRedirectResult()
       .then((result) => {
@@ -92,6 +93,7 @@ export default {
               uid: user.uid,
             });
           });
+
         this.$router.push({ name: "start" });
       })
       .catch((error) => {

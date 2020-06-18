@@ -9,7 +9,7 @@
           <v-card-text>
             <v-container>
               <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12">
                   <v-text-field
                     v-model="title"
                     label="Post title"
@@ -18,7 +18,7 @@
                     required
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12">
                   <v-textarea
                     v-model="content"
                     :rules="titleRules"
@@ -89,10 +89,11 @@ export default {
         this.$fireStore
           .collection("posts")
           .add({
-            title: this.title,
-            content: this.content,
+            title: this.title.trim(),
+            content: this.content.trim(),
             date: this.$fireStoreObj.Timestamp.fromDate(new Date()),
             userId: this.user.uid,
+            userEmail: this.user.email,
           })
           .then((docRef) => {
             // console.log(docRef.id);
