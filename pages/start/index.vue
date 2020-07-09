@@ -1,9 +1,8 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
-    <h1 class="display-2 font-weight-light">Start</h1>
     <div>
-      <p v-if="user.email">{{ user.email }}</p>
-      <v-card max-width="500" class="mx-auto">
+      <p v-if="user.email" class="text-center">{{ user.email }}</p>
+      <v-card max-width="600" class="mx-auto">
         <v-toolbar color="pink" dark>
           <v-toolbar-title>Posts</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -15,7 +14,7 @@
           </v-btn>
         </v-toolbar>
 
-        <v-list two-line>
+        <v-list three-line>
           <v-list-item-group multiple active-class="pink--text">
             <template v-for="(post, index) in posts">
               <v-list-item
@@ -32,11 +31,12 @@
                 <template v-slot:default="{ active, toggle }">
                   <v-list-item-content>
                     <v-list-item-title
-                      class="primary--text"
+                      class="primary--text mb-3"
                       v-text="post.title"
                     ></v-list-item-title>
                     <v-list-item-subtitle
-                      v-text="post.content.slice(0, 10) + '...'"
+                      class="mb-3"
+                      v-text="post.content"
                     ></v-list-item-subtitle>
                     <v-list-item-subtitle
                       class="secondary--text"

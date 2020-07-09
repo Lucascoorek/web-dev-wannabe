@@ -64,11 +64,11 @@
         <v-spacer />
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       </v-app-bar>
-      <v-content>
+      <v-main>
         <v-container>
           <nuxt />
         </v-container>
-      </v-content>
+      </v-main>
       <v-footer fixed app>
         <span>&copy; {{ new Date().getFullYear() }}</span>
         <v-spacer />

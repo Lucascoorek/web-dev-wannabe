@@ -1,33 +1,68 @@
 <template>
-  <div>
+  <div class="single-post">
+    <div class="mb-2" @click="$router.push({ name: 'start' })">
+      <v-btn icon color="secondary">
+        <v-icon>mdi-arrow-left-circle</v-icon>
+      </v-btn>
+    </div>
     <div v-if="currentPost">
       <v-card>
-        <v-card-title>{{ currentPost.title }}</v-card-title>
-        <v-card-subtitle>{{ currentPost.userEmail }}</v-card-subtitle>
-        <v-card-text>{{ currentPost.content }}</v-card-text>
-        <div class="primary--text">
-          <v-card-text>
-            <p>
-              {{ currentPost.date.dateToJs }} {{ currentPost.date.dateToTime }}
-            </p>
-          </v-card-text>
+        <div class="d-flex justify-space-between">
+          <v-card-subtitle
+            class="primary--text"
+            v-text="currentPost.userEmail"
+          ></v-card-subtitle>
+          <v-card-subtitle
+            class="secondary--text"
+            v-text="
+              currentPost.date.dateToJs + ' ' + currentPost.date.dateToTime
+            "
+          >
+          </v-card-subtitle>
         </div>
+        <v-card-title
+          class="text-center text-h5"
+          v-text="currentPost.title"
+        ></v-card-title>
+        <v-card-text v-text="currentPost.content"></v-card-text>
       </v-card>
     </div>
-    <div v-if="user && user.email">
-      <v-card class="mt-3">
-        <v-card-actions>
-          <v-btn text color="primary" @click.stop="showAddCommentModal = true">
-            Add a comment
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+    <div v-if="user && user.email" class="mt-5 d-flex justify-center">
+      <v-btn color="primary" @click.stop="showAddCommentModal = true">
+        Add a comment
+      </v-btn>
     </div>
     <AddCommentDialog v-model="showAddCommentModal" />
     <div>
-      <p v-for="comment in currentPost.comments" :key="comment.id">
-        {{ comment.content }} <span>{{ comment.userEmail }}</span>
-      </p>
+      <h3 class="font-weight-light text-center my-5">Comments</h3>
+      <v-divider></v-divider>
+      <div v-if="currentPost.comments.length">
+        <v-card
+          v-for="(comment, index) in currentPost.comments"
+          :key="comment.id"
+          class="mb-3"
+        >
+          <div class="d-flex justify-space-between">
+            <v-card-subtitle
+              class="primary--text"
+              v-text="comment.userEmail"
+            ></v-card-subtitle>
+
+            <v-card-subtitle
+              class="secondary--text"
+              v-text="comment.date.dateToJs + ' ' + comment.date.dateToTime"
+            >
+            </v-card-subtitle>
+          </div>
+
+          <v-card-subtitle v-text="comment.content"></v-card-subtitle>
+          <v-divider
+            v-if="index + 1 < currentPost.comments.length"
+            :key="index"
+          ></v-divider>
+        </v-card>
+      </div>
+      <div v-else><p>No comments on this post yet...</p></div>
     </div>
   </div>
 </template>
@@ -146,4 +181,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.single-post {
+  max-width: 600px;
+  margin: 0 auto;
+}
+</style>

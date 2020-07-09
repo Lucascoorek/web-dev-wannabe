@@ -1,4 +1,4 @@
-![WDW](../master/static/apple-touch-icon.png)
+![logo](../master/static/apple-touch-icon.png)
 
 # web-dev-wannabe
 
