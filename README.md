@@ -1,3 +1,5 @@
+![WDW](../master/static/apple-touch-icon.png)
+
 # web-dev-wannabe
 
 > A social platform for those who want to become a web developer
